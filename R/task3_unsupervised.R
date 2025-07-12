@@ -12,11 +12,11 @@ library(cluster)
 load_olive_oil_data <- function() {
   con <- dbConnect(
     RPostgres::Postgres(),
-    dbname = "postgres",
-    host = "aws-0-eu-west-2.pooler.supabase.com",
-    user = "pgstudent.rvdwflidqvcvffdccwrh",
-    password = "0%jkXK^tjMZwuG",
-    port = 5432
+    dbname = Sys.getenv("PGRDATABASE"),
+    host = Sys.getenv("PGRHOST"),
+    user = Sys.getenv("PGRUSER"),
+    password = Sys.getenv("PGRPASSWORD"),
+    port = Sys.getenv("PGRPORT")
   )
   
   on.exit(dbDisconnect(con))
