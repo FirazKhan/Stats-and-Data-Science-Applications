@@ -23,19 +23,18 @@ create_analysis_summary <- function(classification_results, regression_results, 
     Task = c("Task 1: Classification", "Task 2: Regression", "Task 3: Unsupervised"),
     Best_Model = c(
       ifelse(rf_reduced_acc > dt_acc, "Parsimonious Random Forest", "Decision Tree"),
-      ifelse(as.numeric(regression_results$aic_comparison$AIC[1]) < as.numeric(regression_results$aic_comparison$AIC[2]), 
-             "GLM (Poisson)", "GAM"),
+      regression_results$best_model,
       "K-means Clustering"
     ),
     Performance_Metric = c(
       paste("Accuracy:", round(max(rf_reduced_acc, dt_acc), 4)),
-      paste("AIC:", round(min(as.numeric(regression_results$aic_comparison$AIC)), 2)),
+      paste("AIC:", round(min(as.numeric(regression_results$aic_comparison$AIC)), 2), "- Pseudo R²:", round(regression_results$pseudo_r2, 3)),
       paste("Silhouette Score:", round(as.numeric(unsupervised_results$silhouette_kmeans), 4))
     ),
     Key_Finding = c(
       sprintf("Feature selection reduced complexity by %.1f%% with %.2f%% accuracy loss", 
               feature_reduction, accuracy_loss),
-      "Age and sex interactions significantly affect extrication rates",
+      "Rate model with offset provides better interpretation of extrication likelihood per collision",
       "Natural groupings identified in olive oil composition data"
     )
   )

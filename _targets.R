@@ -100,9 +100,15 @@ list(
   ),
   
   tar_target(
-    glm_model,
-    train_glm_model(fire_rescue_processed),
-    description = "Train Generalized Linear Model for fire rescue analysis"
+    count_model,
+    train_count_model(fire_rescue_processed),
+    description = "Train Count Model (GLM without offset) for fire rescue analysis"
+  ),
+  
+  tar_target(
+    rate_model,
+    train_rate_model(fire_rescue_processed),
+    description = "Train Rate Model (GLM with offset) for fire rescue analysis"
   ),
   
   tar_target(
@@ -113,8 +119,8 @@ list(
   
   tar_target(
     regression_results,
-    evaluate_regression_models(glm_model, gam_model, fire_rescue_processed),
-    description = "Evaluate regression models and generate results"
+    evaluate_regression_models(count_model, rate_model, gam_model, fire_rescue_processed),
+    description = "Evaluate regression models with comprehensive interpretation"
   ),
   
   # =============================================================================

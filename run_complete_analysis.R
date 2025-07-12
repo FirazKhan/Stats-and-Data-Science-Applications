@@ -73,7 +73,14 @@ tryCatch({
 tryCatch({
   cat("\n--- TASK 2: REGRESSION ---\n")
   tar_load(regression_results)
-  print(regression_results)
+  cat("=== MODEL COMPARISON ===\n")
+  print(regression_results$aic_comparison)
+  cat("\nBest Model:", regression_results$best_model, "\n")
+  cat("Overdispersion Parameter:", round(regression_results$overdispersion_rate, 3), "\n")
+  cat("Pseudo R-squared:", round(regression_results$pseudo_r2, 3), "\n\n")
+  
+  cat("=== INCIDENCE RATE RATIOS (Top 8) ===\n")
+  print(head(regression_results$irr_results[, c("Coefficient", "IRR", "Lower_CI", "Upper_CI", "p_value")], 8))
 }, error = function(e) {
   cat("Task 2 results not available\n")
 })
