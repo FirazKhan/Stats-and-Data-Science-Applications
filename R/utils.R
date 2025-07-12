@@ -6,8 +6,7 @@
 #' @param regression_results Regression results
 #' @param unsupervised_results Unsupervised learning results
 #' @return Summary data frame
-create_analysis_summary <-
-   function(classification_results, regression_results, unsupervised_results) {
+create_analysis_summary <- function(classification_results, regression_results, unsupervised_results) {
 
   rf_reduced_acc <- as.numeric(classification_results$rf_reduced_accuracy)
   dt_acc <- as.numeric(classification_results$dt_accuracy)

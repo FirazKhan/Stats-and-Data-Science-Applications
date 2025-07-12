@@ -530,7 +530,7 @@ evaluate_unsupervised_models <-
   kmeans_result$kmeans_result$cluster), FUN = mean)
 
     cat("\nCLUSTER POSITIONS IN PCA SPACE:\n")
-    for (i in seq_len(nrow(cluster_pca_means)) {
+    for (i in seq_len(nrow(cluster_pca_means))) {
       cat("Cluster", cluster_pca_means$Group.1[i],
           ": PC1 =", round(cluster_pca_means$PC1[i], 2),
           ", PC2 =", round(cluster_pca_means$PC2[i], 2), "\n")
