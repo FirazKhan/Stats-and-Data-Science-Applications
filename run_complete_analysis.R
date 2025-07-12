@@ -50,7 +50,21 @@ cat("\n=== TASK RESULTS ===\n")
 tryCatch({
   cat("\n--- TASK 1: CLASSIFICATION ---\n")
   tar_load(classification_results)
-  print(classification_results)
+  cat("=== FEATURE SELECTION RESULTS ===\n")
+  cat("Selected Features:", paste(classification_results$selected_features, collapse = ", "), "\n")
+  cat("Feature Reduction:", sprintf("%.1f%%", classification_results$feature_reduction_percent), "\n")
+  cat("Accuracy Loss:", sprintf("%.2f%%", classification_results$accuracy_loss_percent), "\n\n")
+  
+  cat("=== MODEL PERFORMANCE COMPARISON ===\n")
+  cat("Full Random Forest Accuracy:", round(classification_results$rf_full_accuracy, 4), "\n")
+  cat("Parsimonious Random Forest Accuracy:", round(classification_results$rf_reduced_accuracy, 4), "\n")
+  cat("Decision Tree Accuracy:", round(classification_results$dt_accuracy, 4), "\n")
+  cat("Overall AUC (Full RF):", round(classification_results$overall_auc_full, 4), "\n")
+  cat("Overall AUC (Reduced RF):", round(classification_results$overall_auc_reduced, 4), "\n")
+  
+  cat("\n=== FEATURE IMPORTANCE RANKINGS ===\n")
+  cat("Top 10 Most Important Features:\n")
+  print(head(classification_results$importance_df, 10))
 }, error = function(e) {
   cat("Task 1 results not available\n")
 })

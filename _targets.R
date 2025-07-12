@@ -60,21 +60,33 @@ list(
   ),
   
   tar_target(
-    rf_model,
+    rf_full_model,
     train_random_forest(pedestrian_split),
-    description = "Train Random Forest model for pedestrian severity prediction"
+    description = "Train full Random Forest model for feature selection"
+  ),
+  
+  tar_target(
+    feature_selection_data,
+    select_important_features(rf_full_model, pedestrian_split, top_n = 10),
+    description = "Select top 10 most important features for parsimonious classifier"
+  ),
+  
+  tar_target(
+    rf_reduced_model,
+    train_parsimonious_rf(feature_selection_data),
+    description = "Train parsimonious Random Forest model with selected features"
   ),
   
   tar_target(
     dt_model,
-    train_decision_tree(pedestrian_split),
-    description = "Train Decision Tree model for pedestrian severity prediction"
+    train_decision_tree(feature_selection_data),
+    description = "Train Decision Tree model for comparison"
   ),
   
   tar_target(
     classification_results,
-    evaluate_classification_models(rf_model, dt_model, pedestrian_split),
-    description = "Evaluate classification models and generate results"
+    evaluate_classification_models(rf_full_model, rf_reduced_model, dt_model, feature_selection_data),
+    description = "Evaluate and compare classification models with feature selection analysis"
   ),
   
   # =============================================================================

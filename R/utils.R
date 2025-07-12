@@ -7,22 +7,34 @@
 #' @param unsupervised_results Unsupervised learning results
 #' @return Summary data frame
 create_analysis_summary <- function(classification_results, regression_results, unsupervised_results) {
+  # Safe numerical operations with error handling
+  rf_reduced_acc <- as.numeric(classification_results$rf_reduced_accuracy)
+  dt_acc <- as.numeric(classification_results$dt_accuracy)
+  feature_reduction <- as.numeric(classification_results$feature_reduction_percent)
+  accuracy_loss <- as.numeric(classification_results$accuracy_loss_percent)
+  
+  # Handle potential NAs
+  if (is.na(rf_reduced_acc)) rf_reduced_acc <- 0
+  if (is.na(dt_acc)) dt_acc <- 0
+  if (is.na(feature_reduction)) feature_reduction <- 0
+  if (is.na(accuracy_loss)) accuracy_loss <- 0
+  
   summary_df <- data.frame(
     Task = c("Task 1: Classification", "Task 2: Regression", "Task 3: Unsupervised"),
     Best_Model = c(
-      ifelse(classification_results$rf_accuracy > classification_results$dt_accuracy, 
-             "Random Forest", "Decision Tree"),
-      ifelse(regression_results$aic_comparison$AIC[1] < regression_results$aic_comparison$AIC[2], 
+      ifelse(rf_reduced_acc > dt_acc, "Parsimonious Random Forest", "Decision Tree"),
+      ifelse(as.numeric(regression_results$aic_comparison$AIC[1]) < as.numeric(regression_results$aic_comparison$AIC[2]), 
              "GLM (Poisson)", "GAM"),
       "K-means Clustering"
     ),
     Performance_Metric = c(
-      paste("Accuracy:", round(max(classification_results$rf_accuracy, classification_results$dt_accuracy), 4)),
-      paste("AIC:", round(min(regression_results$aic_comparison$AIC), 2)),
-      paste("Silhouette Score:", round(unsupervised_results$silhouette_kmeans, 4))
+      paste("Accuracy:", round(max(rf_reduced_acc, dt_acc), 4)),
+      paste("AIC:", round(min(as.numeric(regression_results$aic_comparison$AIC)), 2)),
+      paste("Silhouette Score:", round(as.numeric(unsupervised_results$silhouette_kmeans), 4))
     ),
     Key_Finding = c(
-      "Random Forest shows better performance for pedestrian severity prediction",
+      sprintf("Feature selection reduced complexity by %.1f%% with %.2f%% accuracy loss", 
+              feature_reduction, accuracy_loss),
       "Age and sex interactions significantly affect extrication rates",
       "Natural groupings identified in olive oil composition data"
     )
