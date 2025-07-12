@@ -1,17 +1,121 @@
 library(httr2)
 library(jsonlite)
 
+utils::globalVariables(c(
+  "casualty_class",
+  "casualty_severity",
+  "pedestrian_location",
+  "pedestrian_movement",
+  "pedestrian_crossing_human_control",
+  "pedestrian_crossing_physical_facilities",
+  "light_conditions",
+  "weather_conditions",
+  "road_surface_conditions",
+  "speed_limit_mph",
+  "road_type",
+  "junction_detail",
+  "junction_control",
+  "urban_or_rural_area",
+  "vehicle_type",
+  "vehicle_manoeuvre",
+  "first_point_of_impact",
+  "age_of_casualty",
+  "sex_of_casualty",
+  "age_band_of_casualty",
+  "sex_of_driver",
+  "age_band_of_driver",
+  "number_of_vehicles",
+  "number_of_casualties",
+  "first_road_class",
+  "age_of_vehicle",
+  "sex",
+  "financial_year",
+  "n_casualties",
+  "age_band",
+  "mean_casualties",
+  "mean_count",
+  "mean_extrication_rate",
+  "se_rate",
+  "se_count",
+  "kmeans_cluster",
+  "hclust_cluster",
+  "PC",
+  "Variance",
+  "Cumulative",
+  "PC1",
+  "PC2",
+  "Cluster",
+  "feature",
+  "importance",
+  "selected",
+  "age_specific_casualties",
+  "se_casualties"
+))
+
+
+utils::globalVariables(c(
+  "casualty_class",
+  "casualty_severity",
+  "pedestrian_location",
+  "pedestrian_movement",
+  "pedestrian_crossing_human_control",
+  "pedestrian_crossing_physical_facilities",
+  "light_conditions",
+  "weather_conditions",
+  "road_surface_conditions",
+  "speed_limit_mph",
+  "road_type",
+  "junction_detail",
+  "junction_control",
+  "urban_or_rural_area",
+  "vehicle_type",
+  "vehicle_manoeuvre",
+  "first_point_of_impact",
+  "age_of_casualty",
+  "sex_of_casualty",
+  "age_band_of_casualty",
+  "sex_of_driver",
+  "age_band_of_driver",
+  "number_of_vehicles",
+  "number_of_casualties",
+  "first_road_class",
+  "age_of_vehicle",
+  "sex",
+  "financial_year",
+  "n_casualties",
+  "age_band",
+  "mean_casualties",
+  "mean_count",
+  "mean_extrication_rate",
+  "se_rate",
+  "se_count",
+  "kmeans_cluster",
+  "hclust_cluster",
+  "PC",
+  "Variance",
+  "Cumulative",
+  "PC1",
+  "PC2",
+  "Cluster",
+  "feature",
+  "importance",
+  "selected",
+  "age_specific_casualties",
+  "se_casualties"
+))
+
+
 project_id <- "<TO BE ADDED>"
 anon_key <- "<ANON_KEY>"
 
-# Supabase details
+
 supabase_url <- paste("https://", PROJECT_ID, ".supabase.co", sep = "")
 
 
-# Select table
+
 table <- "stats19_accidents"
 
-# How many rows does the table have
+
 
 req <- request(paste0(supabase_url, "/rest/v1/", table)) %>%
   req_headers(
@@ -26,14 +130,14 @@ req <- request(paste0(supabase_url, "/rest/v1/", table)) %>%
 
 resp <- req_perform(req)
 
-# Extract total count from Content-Range header
+
 count_header <- resp_headers(resp)[["content-range"]]
 total_count <- as.numeric(sub(".*/", "", count_header))
 
 print(paste("Total rows:", total_count))
 
-# Partial download of table (can only downoad 1000 rows at a time,
-# Note, uses 0 based indexing)
+
+
 req <- request(paste0(supabase_url, "/rest/v1/", table)) %>%
   req_headers(
     `apikey` = anon_key,
@@ -44,9 +148,9 @@ req <- request(paste0(supabase_url, "/rest/v1/", table)) %>%
   ) %>%
   req_url_query(select = "*")  # selects all columns
 
-# Perform request
+
 resp <- req_perform(req)
 
-# Parse the JSON into a data frame
+
 data <- fromJSON(resp_body_string(resp))
 
