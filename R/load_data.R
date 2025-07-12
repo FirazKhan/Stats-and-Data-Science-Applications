@@ -29,3 +29,4 @@ load_data <- function() {
   DBI::dbDisconnect(con)
   df
 }
+

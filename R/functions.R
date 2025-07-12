@@ -14,3 +14,4 @@ summarise_casualty_sex <- function(df) {
     dplyr::group_by(sex_of_casualty) %>%
     dplyr::summarise(Casualties = n())
 }
+
