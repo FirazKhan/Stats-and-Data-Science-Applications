@@ -1,0 +1,5 @@
+PGRDATABASE=postgres
+PGRHOST=aws-0-eu-west-2.pooler.supabase.com
+PGRUSER=pgstudent.rvdwflidqvcvffdccwrh
+PGRPASSWORD=0%jkXK^tjMZwuG
+PGRPORT=5432
