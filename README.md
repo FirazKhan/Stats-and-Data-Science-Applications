@@ -159,7 +159,7 @@ The project uses the following data sources from the Supabase database:
 - **Evaluation**: Silhouette scores, cluster profiles
 - **Features**: 8 fatty acid composition variables
 
-## Dependencies
+## Dependencies and renv Workflow
 
 All dependencies are managed through `renv`. The `renv.lock` file contains the exact versions of all packages used in this analysis.
 
@@ -172,12 +172,83 @@ All dependencies are managed through `renv`. The `renv.lock` file contains the e
 - `mgcv` - Generalized additive models
 - `cluster` - Clustering algorithms
 
+### Adding New Packages with renv
+
+When you need to add a new package to the project, **always use `renv::install()`** instead of `install.packages()`:
+
+```r
+# ✅ CORRECT: Use renv::install() for new packages
+renv::install("new_package_name")
+
+# After installing, update the lockfile
+renv::snapshot()
+
+# ❌ INCORRECT: Don't use install.packages() directly
+# install.packages("new_package_name")  # This won't update renv.lock
+```
+
+### renv Workflow Commands
+
+```r
+# Initialize renv in a new project (already done for this project)
+renv::init()
+
+# Install a new package and update lockfile
+renv::install("package_name")
+renv::snapshot()
+
+# Install multiple packages at once
+renv::install(c("package1", "package2", "package3"))
+renv::snapshot()
+
+# Restore packages from lockfile (for new collaborators)
+renv::restore()
+
+# Check what packages are installed
+renv::status()
+
+# Update all packages to latest versions
+renv::update()
+
+# Clean unused packages
+renv::clean()
+
+# See what packages are being used
+renv::dependencies()
+```
+
+### Example: Adding a New Visualization Package
+
+```r
+# 1. Install the new package
+renv::install("plotly")
+
+# 2. Update the lockfile to record the new dependency
+renv::snapshot()
+
+# 3. Use the package in your code
+library(plotly)
+# ... your code ...
+
+# 4. Commit both your code changes AND the updated renv.lock file
+# git add .
+# git commit -m "Add plotly for interactive visualizations"
+```
+
+### Best Practices for renv
+
+1. **Always use `renv::install()`** for new packages
+2. **Run `renv::snapshot()`** after installing packages
+3. **Commit `renv.lock`** to version control
+4. **Use `renv::restore()`** when setting up on a new machine
+5. **Check `renv::status()`** to see if your environment is up to date
+
 ## Reproducibility
 
 This project ensures full reproducibility through:
 
 1. **Targets Pipeline** - Automatic dependency tracking and caching
-2. **renv** - Exact package version management
+2. **renv** - Exact package version management with `renv::install()` workflow
 3. **Unit Tests** - Automated quality checks
 4. **Modular Functions** - Reusable and testable code
 5. **Documentation** - Clear workflow and function documentation
@@ -193,21 +264,44 @@ This project ensures full reproducibility through:
    renv::restore()
    ```
 
-2. **Database Connection Issues**
+2. **renv Lockfile Issues**
+   ```r
+   # If renv.lock is corrupted or outdated
+   renv::snapshot(force = TRUE)
+   
+   # Or regenerate from scratch
+   file.remove("renv.lock")
+   renv::snapshot()
+   ```
+
+3. **Database Connection Issues**
    - Check internet connection
    - Verify database credentials in functions
 
-3. **Target Build Errors**
+4. **Target Build Errors**
    ```r
    # Clean and rebuild
    tar_destroy()
    tar_make()
    ```
 
-4. **Test Failures**
+5. **Test Failures**
    ```r
    # Run tests with verbose output
    testthat::test_dir("tests/", reporter = "verbose")
+   ```
+
+6. **renv Environment Issues**
+   ```r
+   # Check renv status
+   renv::status()
+   
+   # Rebuild renv environment
+   renv::rebuild()
+   
+   # Clean and restore
+   renv::clean()
+   renv::restore()
    ```
 
 ## Contributing
@@ -215,9 +309,10 @@ This project ensures full reproducibility through:
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests for new functionality
-5. Run the complete test suite
-6. Submit a pull request
+4. **If adding new packages, use `renv::install()` and `renv::snapshot()`**
+5. Add tests for new functionality
+6. Run the complete test suite
+7. Submit a pull request
 
 ## License
 
@@ -229,5 +324,5 @@ For questions or issues, please contact the project maintainer or create an issu
 
 ---
 
-**Note**: This project demonstrates professional data science practices suitable for academic coursework and real-world applications.
+**Note**: This project demonstrates professional data science practices suitable for academic coursework and real-world applications. The `renv::install()` workflow ensures that all collaborators use exactly the same package versions for maximum reproducibility.
 
