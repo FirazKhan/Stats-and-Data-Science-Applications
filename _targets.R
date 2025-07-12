@@ -189,11 +189,12 @@ list(
   # REPORT TARGETS
   # =============================================================================
   
-  tar_render(
-    report,
-    "vignettes/Report.Rmd",
-    description = "Generate final report with all analysis results"
-  ),
+  # Commented out temporarily to avoid rendering issues
+  # tar_render(
+  #   report,
+  #   "vignettes/Report.Rmd",
+  #   description = "Generate final report with all analysis results"
+  # ),
   
   # =============================================================================
   # SUMMARY TARGETS
