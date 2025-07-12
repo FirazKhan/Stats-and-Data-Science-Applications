@@ -15,7 +15,7 @@ tar_option_set(
   packages = c(
     "dplyr", "DBI", "RPostgres", "ggplot2", "tidyr",
     "caret", "randomForest", "rpart", "pROC",
-    "mgcv", "stats", "cluster"
+    "mgcv", "stats", "cluster", "factoextra"
   )
 )
 
@@ -124,7 +124,7 @@ list(
   ),
   
   # =============================================================================
-  # TASK 3: UNSUPERVISED LEARNING TARGETS
+  # TASK 3: UNSUPERVISED LEARNING TARGETS - ENHANCED
   # =============================================================================
   
   tar_target(
@@ -136,25 +136,31 @@ list(
   tar_target(
     pca_result,
     perform_pca(olive_oil_processed),
-    description = "Perform Principal Component Analysis on olive oil data"
+    description = "Perform Principal Component Analysis with comprehensive justification"
+  ),
+  
+  tar_target(
+    cluster_analysis,
+    determine_optimal_clusters(olive_oil_processed),
+    description = "Determine optimal number of clusters using multiple methods"
   ),
   
   tar_target(
     kmeans_result,
-    perform_kmeans_clustering(olive_oil_processed),
-    description = "Perform K-means clustering on olive oil data"
+    perform_kmeans_clustering(olive_oil_processed, cluster_analysis),
+    description = "Perform K-means clustering with justified optimal k"
   ),
   
   tar_target(
     hclust_result,
-    perform_hierarchical_clustering(olive_oil_processed),
-    description = "Perform hierarchical clustering on olive oil data"
+    perform_hierarchical_clustering(olive_oil_processed, cluster_analysis),
+    description = "Perform hierarchical clustering with justified optimal k"
   ),
   
   tar_target(
     unsupervised_results,
     evaluate_unsupervised_models(pca_result, kmeans_result, hclust_result, olive_oil_processed),
-    description = "Evaluate unsupervised learning models and generate results"
+    description = "Comprehensive evaluation and interpretation of unsupervised learning models"
   ),
   
   # =============================================================================
@@ -176,7 +182,7 @@ list(
   tar_target(
     unsupervised_plots,
     create_unsupervised_plots(unsupervised_results, pca_result, olive_oil_processed),
-    description = "Create plots for unsupervised learning analysis"
+    description = "Create comprehensive plots for unsupervised learning analysis including PCA scatterplot with cluster groups"
   ),
   
   # =============================================================================
