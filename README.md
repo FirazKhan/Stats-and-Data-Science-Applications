@@ -27,14 +27,23 @@ This project contains three main analytical tasks:
    cd mthm503
    ```
 
-2. **Install dependencies:**
+2. **Configure database connection:**
+   ```bash
+   # Copy the template file
+   cp .Renviron.template .Renviron
+   
+   # Edit .Renviron with your database credentials
+   # DO NOT commit .Renviron to version control
+   ```
+
+3. **Install dependencies:**
    ```r
    renv::restore()
    ```
 
-3. **Run the complete analysis:**
+4. **Run the complete analysis:**
    ```r
-   source("run_analysis.R")
+   source("run_me.R")
    ```
 
 ## Project Structure
@@ -194,8 +203,23 @@ This project ensures full reproducibility through:
    ```
 
 2. **Database Connection Issues**
-   - Check internet connection
-   - Verify database credentials in functions
+   ```r
+   # Test database connection
+   source("R/load_data.R")
+   con <- get_db_connection()
+   if (!is.null(con)) {
+     cat("✓ Database connected successfully\n")
+     DBI::dbDisconnect(con)
+   } else {
+     cat("✗ Database connection failed\n")
+   }
+   ```
+   
+   **Common database issues:**
+   - Missing `.Renviron` file: Copy `.Renviron.template` to `.Renviron`
+   - Invalid credentials: Update `.Renviron` with correct database details
+   - Network issues: Check internet connection and firewall settings
+   - Database server down: Contact database administrator
 
 3. **Target Build Errors**
    ```r

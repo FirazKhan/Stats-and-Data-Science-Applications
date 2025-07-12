@@ -2,3 +2,12 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# Environment variables with sensitive data
+.Renviron
+
+# Targets cache
+_targets/
+
+# renv
+renv/
