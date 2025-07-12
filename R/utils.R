@@ -102,7 +102,7 @@ load_results <- function(filename) {
   if (file.exists(filename)) {
     results <- readRDS(filename)
     cat("Results loaded from:", filename, "\n")
-    return(results)
+    results
   } else {
     stop("File not found:", filename)
   }
