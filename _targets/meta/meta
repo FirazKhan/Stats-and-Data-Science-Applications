@@ -29,7 +29,7 @@ perform_pca|function|89aef2bc608d7b6e
 select_important_features|function|f3986b9fa6b9f3ff
 train_rate_model|function|df9ac652b8949c4b
 determine_optimal_clusters|function|c0f55b37760515b7
-.__global__|object|088512c715285891
+.__global__|object|05af54b99e52a1af
 get_db_connection|function|b1224d7a16723b93
 preprocess_fire_rescue_data|function|f94fc50341519913
 summarise_data|function|13337a6e32013c47
