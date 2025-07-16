@@ -1,6 +1,6 @@
 # MTHM503 Data Science Project
 
-## Reproducible Data Science Analysis
+## Data Science Analysis
 
 This project demonstrates professional data science practices using `targets` for reproducible workflow management and `renv` for dependency management.
 
@@ -29,11 +29,17 @@ This project contains three main analytical tasks:
 
 2. **Configure database connection:**
    ```bash
-   # Copy the template file
-   cp .Renviron.template .Renviron
-   
-   # Edit .Renviron with your database credentials
+   # Create .Renviron file with your database credentials
    # DO NOT commit .Renviron to version control
+   ```
+   
+   Create a `.Renviron` file with the following variables:
+   ```
+   DB_HOST=your_host
+   DB_PORT=your_port
+   DB_NAME=your_database_name
+   DB_USER=your_username
+   DB_PASSWORD=your_password
    ```
 
 3. **Install dependencies:**
@@ -51,21 +57,26 @@ This project contains three main analytical tasks:
 ```
 mthm503/
 ├── _targets.R                 # Main targets pipeline configuration
-├── run_analysis.R             # Main script to run complete analysis
-├── visualize_workflow.R       # Workflow visualization script
+├── run_me.R                   # Main script to run complete analysis
+├── init.R                     # Initialization script
 ├── R/                         # R functions for each task
-│   ├── functions.R           # Original utility functions
+│   ├── functions.R           # Utility functions
 │   ├── load_data.R           # Data loading functions
 │   ├── utils.R               # Utility functions
+│   ├── curl_data.R           # Data retrieval functions
 │   ├── task1_classification.R # Task 1: Classification functions
 │   ├── task2_regression.R     # Task 2: Regression functions
 │   └── task3_unsupervised.R   # Task 3: Unsupervised learning functions
 ├── tests/                     # Unit tests
-│   ├── test_load_data.R      # Original tests
+│   ├── test_load_data.R      # Data loading tests
 │   └── test_analysis.R       # Comprehensive analysis tests
 ├── vignettes/                 # Reports and documentation
+│   └── Report.Rmd            # Main report template
+├── plots/                     # Generated plots
 ├── renv/                      # R environment management
 ├── renv.lock                  # Locked package versions
+├── .Renviron                  # Database credentials (not in version control)
+├── .gitignore                 # Git ignore rules
 └── README.md                  # This file
 ```
 
@@ -96,8 +107,8 @@ targets::tar_make(unsupervised_results)
 # Interactive network diagram
 tar_visnetwork()
 
-# Or use the visualization script
-source("visualize_workflow.R")
+# See target dependencies
+tar_glimpse()
 ```
 
 ### Checking Target Status
@@ -155,6 +166,7 @@ The project uses the following data sources from the Supabase database:
 - **Models**: Random Forest vs Decision Tree
 - **Evaluation**: Accuracy, Kappa, AUC, Confusion Matrix
 - **Features**: 28 variables including casualty, accident, and vehicle characteristics
+- **Feature Selection**: Top 10 most important features selected for parsimonious model
 
 ### Task 2: Regression
 - **Objective**: Analyze age and sex effects on fire rescue extrication rates
@@ -165,7 +177,7 @@ The project uses the following data sources from the Supabase database:
 ### Task 3: Unsupervised Learning
 - **Objective**: Understand natural variation in olive oil composition
 - **Methods**: PCA + K-means + Hierarchical clustering
-- **Evaluation**: Silhouette scores, cluster profiles
+- **Evaluation**: Silhouette scores, cluster profiles, optimal component/cluster determination
 - **Features**: 8 fatty acid composition variables
 
 ## Dependencies
@@ -179,7 +191,9 @@ All dependencies are managed through `renv`. The `renv.lock` file contains the e
 - `dplyr`, `ggplot2` - Data manipulation and visualization
 - `caret`, `randomForest`, `rpart` - Machine learning
 - `mgcv` - Generalized additive models
-- `cluster` - Clustering algorithms
+- `cluster`, `factoextra` - Clustering algorithms
+- `DBI`, `RPostgres` - Database connectivity
+- `pROC` - ROC curve analysis
 
 ## Reproducibility
 
@@ -216,7 +230,7 @@ This project ensures full reproducibility through:
    ```
    
    **Common database issues:**
-   - Missing `.Renviron` file: Copy `.Renviron.template` to `.Renviron`
+   - Missing `.Renviron` file: Create `.Renviron` with database credentials
    - Invalid credentials: Update `.Renviron` with correct database details
    - Network issues: Check internet connection and firewall settings
    - Database server down: Contact database administrator
@@ -233,6 +247,12 @@ This project ensures full reproducibility through:
    # Run tests with verbose output
    testthat::test_dir("tests/", reporter = "verbose")
    ```
+
+## Security Notes
+
+- **Never commit `.Renviron` to version control** - it contains sensitive database credentials
+- The `.gitignore` file is configured to exclude `.Renviron`
+- Use environment variables for all sensitive configuration
 
 ## Contributing
 
